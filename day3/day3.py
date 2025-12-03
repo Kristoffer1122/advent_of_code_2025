@@ -1,18 +1,18 @@
-input_data = open("./input.txt", "r").read().strip()
+input = open("./input.txt", "r"). read(). strip()
 
 total = 0
 
-for bank in input_data.split('\n'):
+for line in input.split('\n'):
+    n = len(line)
 
-    maxval = 0
+    result = []
 
-    for i in range(len(bank)):
-        for j in range(i + 1, len(bank)):
+    for i in range(n):
+        while result and result[-1] < line[i] and len(result) + (n - i) > 12:
+            result.pop()
+        if len(result) < 12:
+            result.append(line[i])
 
-            # lage parr av h;ygeste tallene
-            joltage = int(bank[i] + bank[j])
-            maxval = max(maxval, joltage)
-
-    total += maxval
+    total += int(''.join(result))
 
 print(total)
