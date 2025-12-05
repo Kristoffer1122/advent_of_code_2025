@@ -1,13 +1,11 @@
 input = open("input.txt").read().strip().split("\n")
 
 instructions = []
-working = []
 ranges = []
 
 for num, ingredient in enumerate(input):
     if ingredient == "":
         instructions = input[:num]
-        working = input[num + 1:]
         break
 
 # filter ranges
@@ -16,19 +14,20 @@ for instruction in instructions:
     if len(range_parts) == 2:
         ranges.append((int(range_parts[0]), int(range_parts[1])))
 
-# check each ingredient
-fresh_count = 0
-for ingredient_id in working:
-    ingredient_id = int(ingredient_id)
-    is_fresh = False
+# sort ranges by start
+ranges.sort()
 
-    # check if ingredient in ranges
-    for range_start, range_end in ranges:
-        if range_start <= ingredient_id <= range_end:
-            is_fresh = True
-            break
+# merge simmilar ranges
+merged = []
+for range_start, range_end in ranges:
+    if merged and range_start <= merged[-1][1] + 1:
+        # simmilar range merge
+        merged[-1] = (merged[-1][0], max(merged[-1][1], range_end))
+    else:
+        merged.append((range_start, range_end))
 
-    if is_fresh:
-        fresh_count += 1
+total = 0
+for range_start, range_end in merged:
+    total += (range_end - range_start + 1)
 
-print(f"\nTotal fresh ingredients: {fresh_count}")
+print(total)
