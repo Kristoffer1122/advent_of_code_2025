@@ -1,4 +1,4 @@
-input = open("input.txt", "r"). read().strip().split("\n")
+input = open("input.txt", "r").read().strip().split("\n")
 
 # start pos
 start_col = 0
