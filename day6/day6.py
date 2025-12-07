@@ -5,27 +5,34 @@ width = max(len(line) for line in input)
 input = [line.ljust(width) for line in input]
 
 problems = []
-col = 0
+col = width - 1
 
-while col < width:
+# read right to left
+while col >= 0:
     if all(row[col] == ' ' for row in input):
-        col += 1
+        col -= 1
         continue
 
-    # find operand start and end 
-    problem_start = col
-    while col < width and any(row[col] != ' ' for row in input):
-        col += 1
+    # find operand start and end
+    problem_end = col
+    while col >= 0 and any(row[col] != ' ' for row in input):
+        col -= 1
+    problem_start = col + 1
 
     numbers = []
     operator = None
 
-    for row in input:
-        value = row[problem_start:col]. strip()
-        if value in ['+', '*']:
-            operator = value
-        elif value:
-            numbers.append(int(value))
+    # read each column right to left
+    for c in range(problem_end, problem_start - 1, -1):
+        digits = []
+        for row in input:
+            if row[c] in ['+', '*']:
+                operator = row[c]
+            elif row[c] != ' ':
+                digits. append(row[c])
+
+        if digits:
+            numbers.append(int(''.join(digits)))
 
     # find result
     result = numbers[0]
