@@ -1,4 +1,4 @@
-input = open("input.txt", "r").read().strip().split("\n")
+input = open("input.txt", "r"). read().strip().split("\n")
 
 # start pos
 start_col = 0
@@ -10,32 +10,24 @@ for i, char in enumerate(input[0]):
 height = len(input)
 width = len(input[0])
 
-# active beams
-beams = set()
-beams.add(start_col)
+# track timelines
+timelines = {start_col: 1}
 
-splits = 0
+for row in range(height):
+    new_timelines = {}
 
-# process row by row
-for row in range(1, height):
-    new_beams = set()
-
-    for col in beams:
+    for col, count in timelines.items():
         if input[row][col] == '^':
-            # split beam
-            splits += 1
-
-            # add left beam
+            # left
             if col - 1 >= 0:
-                new_beams.add(col - 1)
+                new_timelines[col - 1] = new_timelines.get(col - 1, 0) + count
 
-            # add right beam
+            #right
             if col + 1 < width:
-                new_beams.add(col + 1)
+                new_timelines[col + 1] = new_timelines.get(col + 1, 0) + count
         else:
-            # continue straight down
-            new_beams.add(col)
+            new_timelines[col] = new_timelines.get(col, 0) + count
 
-    beams = new_beams
+    timelines = new_timelines
 
-print(splits)
+print(sum(timelines.values()))
